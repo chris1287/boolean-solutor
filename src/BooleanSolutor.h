@@ -3,10 +3,16 @@
 
 #include <string>
 #include <stack>
-#include <sstream>
 #include <unordered_map>
-#include <log4cplus/logger.h>
-#include <log4cplus/loggingmacros.h>
+#include <vector>
+
+using priority_t = uint8_t;
+using element_t = uint64_t;
+
+enum class associativity_t {
+    left,
+    right
+};
 
 class BooleanSolutor {
 public:
@@ -14,22 +20,19 @@ public:
     bool solve(std::string const &in);
 
 private:
-    std::string infix_to_postfix(std::string const &in);
-    bool solve_postfix(std::string const &in);
+    std::vector<element_t> initialize_expression(std::string const &in);
+    std::vector<element_t> infix_to_postfix(std::vector<element_t> const &in);
+    bool solve_postfix(std::vector<element_t> const &in);
 
-    void on_ws(char x, std::stringstream &out, std::stack<char> &ops);
-    void on_operator(char x, std::stringstream &out, std::stack<char> &ops);
-    void on_open_parentheses(char x, std::stringstream &out, std::stack<char> &ops);
-    void on_close_parentheses(char x, std::stringstream &out, std::stack<char> &ops);
-    void on_symbol(char x, std::stringstream &out, std::stack<char> &ops);
+    void on_operator(element_t x, std::vector<element_t> &out, std::stack<element_t> &ops);
+    void on_open_parentheses(element_t x, std::vector<element_t> &out, std::stack<element_t> &ops);
+    void on_close_parentheses(element_t x, std::vector<element_t> &out, std::stack<element_t> &ops);
+    void on_symbol(element_t x, std::vector<element_t> &out, std::stack<element_t> &ops);
 
 private:
-    enum class Associativity {
-        Left,
-        Right
-    };
-
-    std::unordered_map<char, std::pair<int, Associativity>> operators;
+    std::unordered_map<element_t, std::pair<priority_t, associativity_t>> operators;
+    std::unordered_map<element_t, double> variables;
+    element_t next_free_variable;
 };
 
 #endif // BooleanSolutor_H

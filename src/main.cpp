@@ -10,7 +10,7 @@ int main(int argc, char *argv[]) {
     log4cplus::PropertyConfigurator::doConfigure(LOG4CPLUS_TEXT("log4c.properties"));
 
     if(argc != 2) {
-        LOG4CPLUS_ERROR(__FUNCTION__, LOG4CPLUS_TEXT("expected logical expression, e.g: 1 * !( 0 + 0 ) * !0"));
+        LOG4CPLUS_ERROR(__FUNCTION__, LOG4CPLUS_TEXT("expected logical expression, e.g: (42 > -42) && !false && (true || false)"));
         return 1;
     }
 
@@ -18,7 +18,7 @@ int main(int argc, char *argv[]) {
 
     try {
         auto res = boolean_solutor.solve(argv[1]);
-        LOG4CPLUS_INFO(__FUNCTION__, LOG4CPLUS_TEXT(argv[1]) << "=" << LOG4CPLUS_TEXT(res));
+        LOG4CPLUS_INFO(__FUNCTION__, LOG4CPLUS_TEXT(argv[1]) << "=" << LOG4CPLUS_TEXT((res ? "true" : "false")));
     } catch (std::exception &e ) {
         LOG4CPLUS_ERROR(__FUNCTION__, LOG4CPLUS_TEXT(e.what()));
     }
